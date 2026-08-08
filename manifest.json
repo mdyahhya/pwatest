@@ -1,0 +1,48 @@
+{
+  "name": "PWA Test by Yahya",
+  "short_name": "PWA Yahya",
+  "description": "Comprehensive PWA Installation & Capability Testing App for iOS, Android, and Desktop.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "orientation": "any",
+  "categories": ["utilities", "developer tools"],
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Check PWA Status",
+      "short_name": "Status",
+      "description": "Check if PWA is installed and running standalone",
+      "url": "./index.html#status",
+      "icons": [{ "src": "./icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "iOS Install Guide",
+      "short_name": "iOS Guide",
+      "description": "View step-by-step instructions to add PWA to iOS Home Screen",
+      "url": "./index.html#ios-guide",
+      "icons": [{ "src": "./icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

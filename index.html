@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>PWA Test by Yahya</title>
+  
+  <!-- PWA Manifest & Icons -->
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" sizes="64x64" href="favicon.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <!-- iOS Specific PWA Meta Tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="PWA Yahya">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+
+  <!-- Minimal & Modern Combined Styles -->
+  <style>
+    /* Global Reset & Design Tokens */
+    :root {
+      --bg-color: #ffffff;
+      --bg-alt: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --border-hover: #cbd5e1;
+      --accent-color: #0f172a;
+      --accent-light: #f1f5f9;
+      --success-color: #10b981;
+      --success-bg: #ecfdf5;
+      --warning-color: #f59e0b;
+      --warning-bg: #fffbeb;
+      --danger-color: #ef4444;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.05);
+      --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08);
+      --shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.12);
+      --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background-color: var(--bg-alt);
+      color: var(--text-main);
+      line-height: 1.5;
+      min-height: 100vh;
+      padding: 16px;
+      padding-bottom: 90px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 768px;
+      margin: 0 auto;
+    }
+
+    /* Header Styling */
+    header {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 24px 20px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--text-main);
+    }
+
+    .brand-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    h1 svg {
+      width: 28px;
+      height: 28px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.2;
+    }
+
+    .author-badge {
+      background: var(--accent-light);
+      color: var(--text-main);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 99px;
+      border: 1px solid var(--border-color);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      margin-bottom: 16px;
+    }
+
+    /* Status Badges Row */
+    .status-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 99px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      background: var(--bg-alt);
+      border: 1px solid var(--border-color);
+    }
+
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--text-muted);
+    }
+
+    .badge-dot.online { background-color: var(--success-color); }
+    .badge-dot.offline { background-color: var(--danger-color); }
+    .badge-dot.standalone { background-color: var(--success-color); }
+    .badge-dot.browser { background-color: var(--warning-color); }
+
+    /* Action & Banner Card */
+    .install-banner {
+      background: var(--text-main);
+      color: #ffffff;
+      border-radius: var(--radius-md);
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .install-banner-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .install-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .install-desc {
+      font-size: 0.88rem;
+      color: #cbd5e1;
+      line-height: 1.4;
+    }
+
+    .banner-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 18px;
+      font-size: 0.9rem;
+      font-weight: 650;
+      border-radius: var(--radius-sm);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+      text-decoration: none;
+    }
+
+    .btn-light {
+      background: #ffffff;
+      color: var(--text-main);
+    }
+
+    .btn-light:hover {
+      background: #f1f5f9;
+    }
+
+    .btn-outline-light {
+      background: transparent;
+      color: #ffffff;
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-outline-light:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-dark {
+      background: var(--text-main);
+      color: #ffffff;
+    }
+
+    .btn-dark:hover {
+      opacity: 0.9;
+    }
+
+    .btn-secondary {
+      background: var(--bg-alt);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+      background: var(--accent-light);
+      border-color: var(--border-hover);
+    }
+
+    .btn-full {
+      width: 100%;
+    }
+
+    /* Grid & Cards Section */
+    .section-title {
+      font-size: 1.05rem;
+      font-weight: 750;
+      color: var(--text-main);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 18px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .card-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: var(--accent-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-main);
+      flex-shrink: 0;
+    }
+
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    /* Checklist items */
+    .checklist {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .check-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      padding: 6px 0;
+    }
+
+    .check-label {
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .check-status {
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .check-status.pass { color: var(--success-color); }
+    .check-status.warn { color: var(--warning-color); }
+    .check-status.info { color: var(--text-main); }
+
+    /* Test buttons list inside card */
+    .test-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    /* Output Console Log */
+    .console-box {
+      background: #090d16;
+      color: #38bdf8;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 0.8rem;
+      padding: 14px;
+      border-radius: var(--radius-sm);
+      max-height: 180px;
+      overflow-y: auto;
+      margin-top: 10px;
+      border: 1px solid #1e293b;
+    }
+
+    .console-line {
+      margin-bottom: 4px;
+      line-height: 1.4;
+      word-break: break-all;
+    }
+    .console-time { color: #64748b; margin-right: 6px; }
+
+    /* iOS Guide Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 1000;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-sheet {
+      background: #ffffff;
+      width: 100%;
+      max-width: 500px;
+      border-radius: 24px 24px 0 0;
+      padding: 24px 20px 36px 20px;
+      box-shadow: var(--shadow-lg);
+      transform: translateY(100%);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    @media (min-width: 600px) {
+      .modal-overlay {
+        align-items: center;
+        padding: 20px;
+      }
+      .modal-sheet {
+        border-radius: 20px;
+        transform: scale(0.95) translateY(0);
+      }
+      .modal-overlay.active .modal-sheet {
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .modal-overlay.active .modal-sheet {
+      transform: translateY(0);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .modal-title {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .modal-close {
+      background: var(--bg-alt);
+      border: 1px solid var(--border-color);
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    /* iOS Step by step */
+    .ios-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .step-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      background: var(--bg-alt);
+      border: 1px solid var(--border-color);
+      padding: 14px;
+      border-radius: var(--radius-sm);
+    }
+
+    .step-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--text-main);
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .step-text h4 {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 2px;
+    }
+
+    .step-text p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .icon-inline {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #e2e8f0;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 0.8rem;
+    }
+
+    /* Footer */
+    footer {
+      margin-top: auto;
+      text-align: center;
+      padding: 20px 0;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      border-top: 1px solid var(--border-color);
+      width: 100%;
+      max-width: 768px;
+    }
+
+    footer a {
+      color: var(--text-main);
+      font-weight: 600;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <div class="brand-title">
+        <h1>
+          <svg viewBox="0 0 24 24">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+          </svg>
+          PWA Test
+        </h1>
+        <span class="author-badge">by Yahya</span>
+      </div>
+      <p class="subtitle">Progressive Web App Verification & Capability Testing for iOS, Android & Desktop</p>
+      
+      <!-- Live Status Bar -->
+      <div class="status-bar">
+        <div class="badge" id="badge-mode">
+          <span class="badge-dot browser" id="dot-mode"></span>
+          <span id="text-mode">Detecting Display Mode...</span>
+        </div>
+        <div class="badge" id="badge-platform">
+          <span>📱</span>
+          <span id="text-platform">Detecting OS...</span>
+        </div>
+        <div class="badge" id="badge-online">
+          <span class="badge-dot online" id="dot-online"></span>
+          <span id="text-online">Online</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Installation Action Banner -->
+    <div class="install-banner">
+      <div class="install-banner-header">
+        <div>
+          <div class="install-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Install PWA Application
+          </div>
+          <p class="install-desc" id="install-desc-text">
+            Add this app to your Home Screen for instant offline access, full-screen experience, and native-like performance.
+          </p>
+        </div>
+      </div>
+      <div class="banner-buttons">
+        <button class="btn btn-light" id="btn-install-native" style="display: none;">
+          ⚡ Install App Now
+        </button>
+        <button class="btn btn-outline-light" id="btn-ios-guide">
+          🍎 iOS Installation Instructions
+        </button>
+        <button class="btn btn-outline-light" id="btn-desktop-guide">
+          💻 Android / Desktop Guide
+        </button>
+      </div>
+    </div>
+
+    <!-- Diagnostic & Specs Grid -->
+    <div class="section-title">
+      🔍 PWA Diagnostic & Audit Checklist
+    </div>
+    
+    <div class="cards-grid">
+      <!-- Card: PWA Manifest & Meta -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">📋</div>
+          <div class="card-title">PWA Manifest & Meta Tags</div>
+        </div>
+        <ul class="checklist">
+          <li class="check-item">
+            <span class="check-label">Web App Manifest</span>
+            <span class="check-status pass" id="chk-manifest">✓ Linked</span>
+          </li>
+          <li class="check-item">
+            <span class="check-label">Service Worker File</span>
+            <span class="check-status pass" id="chk-sw">Checking...</span>
+          </li>
+          <li class="check-item">
+            <span class="check-label">iOS Web Clip Support</span>
+            <span class="check-status pass">✓ Meta Present</span>
+          </li>
+          <li class="check-item">
+            <span class="check-label">Apple Touch Icon (180x180)</span>
+            <span class="check-status pass">✓ Configured</span>
+          </li>
+          <li class="check-item">
+            <span class="check-label">HTTPS / Localhost</span>
+            <span class="check-status pass" id="chk-secure">✓ Secure Context</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Card: Environment Info -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">⚙️</div>
+          <div class="card-title">System & Device Profile</div>
+        </div>
+        <ul class="checklist">
+          <li class="check-item">
+            <span class="check-label">Operating System</span>
+            <span class="check-status info" id="info-os">Detecting...</span>
+          </li>
+          <li class="check-item">
+            <span class="check-label">Browser Engine</span>
+            <span class="check-status info" id="info-browser">Detecting...</span>
+          </li>
+          <li class="check-item">
+            <span class="check-label">Standalone PWA Mode</span>
+            <span class="check-status info" id="info-standalone">Detecting...</span>
+          </li>
+          <li class="check-item">
+            <span class="check-label">Screen Resolution</span>
+            <span class="check-status info" id="info-screen">0x0</span>
+          </li>
+          <li class="check-item">
+            <span class="check-label">Touch Capabilities</span>
+            <span class="check-status info" id="info-touch">Detecting...</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- PWA Feature Testing Suite -->
+    <div class="section-title">
+      🧪 Interactive Feature Test Suite
+    </div>
+
+    <div class="cards-grid">
+      <!-- Card: Cache & Offline -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">⚡</div>
+          <div class="card-title">Offline & Service Worker API</div>
+        </div>
+        <div class="test-actions">
+          <button class="btn btn-secondary btn-full" id="btn-test-offline">
+            📦 Inspect Cached Assets
+          </button>
+          <button class="btn btn-secondary btn-full" id="btn-test-sw-ping">
+            📡 Ping Service Worker
+          </button>
+          <button class="btn btn-secondary btn-full" id="btn-clear-cache">
+            🗑️ Clear Offline Cache
+          </button>
+        </div>
+      </div>
+
+      <!-- Card: Native Device APIs -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">📲</div>
+          <div class="card-title">Native Device Hardware APIs</div>
+        </div>
+        <div class="test-actions">
+          <button class="btn btn-secondary btn-full" id="btn-test-notify">
+            🔔 Test Push Notification
+          </button>
+          <button class="btn btn-secondary btn-full" id="btn-test-share">
+            📤 Test Native Web Share
+          </button>
+          <button class="btn btn-secondary btn-full" id="btn-test-vibrate">
+            📳 Test Device Vibration
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live Test Console -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">💻</div>
+        <div class="card-title">PWA Live Console & Diagnostics Output</div>
+      </div>
+      <div class="console-box" id="console-output">
+        <div class="console-line"><span class="console-time">[System]</span> Initializing PWA Test by Yahya...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- iOS Installation Guide Modal -->
+  <div class="modal-overlay" id="ios-modal">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span>🍎</span> How to Install on iOS Safari
+        </div>
+        <button class="modal-close" id="modal-close-btn">&times;</button>
+      </div>
+      <p style="font-size: 0.88rem; color: var(--text-muted);">
+        Apple iOS Safari requires adding Progressive Web Apps manually via the share sheet menu:
+      </p>
+
+      <div class="ios-steps">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <div class="step-text">
+            <h4>Open in Safari Browser</h4>
+            <p>Ensure you are viewing this page in official Apple Safari browser on iPhone or iPad.</p>
+          </div>
+        </div>
+
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <div class="step-text">
+            <h4>Tap Share Button</h4>
+            <p>Tap the <span class="icon-inline">📤 Share</span> icon located at the bottom center of your iPhone screen (or top right on iPad).</p>
+          </div>
+        </div>
+
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <div class="step-text">
+            <h4>Select "Add to Home Screen"</h4>
+            <p>Scroll down the Share Sheet menu options and tap <span class="icon-inline">➕ Add to Home Screen</span>.</p>
+          </div>
+        </div>
+
+        <div class="step-card">
+          <div class="step-num">4</div>
+          <div class="step-text">
+            <h4>Tap "Add"</h4>
+            <p>Confirm by tapping <span class="icon-inline">Add</span> in the top-right corner. The PWA icon will appear on your Home Screen!</p>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn btn-dark btn-full" id="ios-modal-dismiss">
+        Understood & Close
+      </button>
+    </div>
+  </div>
+
+  <!-- Desktop & Android Guide Modal -->
+  <div class="modal-overlay" id="desktop-modal">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span>💻</span> Android & Desktop Installation
+        </div>
+        <button class="modal-close" id="desktop-modal-close">&times;</button>
+      </div>
+
+      <div class="ios-steps">
+        <div class="step-card">
+          <div class="step-num">🤖</div>
+          <div class="step-text">
+            <h4>Android (Google Chrome / Samsung Internet)</h4>
+            <p>Tap the <strong>"⚡ Install App Now"</strong> button above, or open browser menu (⋮) and tap <strong>"Install app"</strong> or <strong>"Add to Home Screen"</strong>.</p>
+          </div>
+        </div>
+
+        <div class="step-card">
+          <div class="step-num">💻</div>
+          <div class="step-text">
+            <h4>Desktop (Chrome / Microsoft Edge)</h4>
+            <p>Click the <strong>Install Icon</strong> inside the browser address bar (right side), or tap the Install button on this page.</p>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn btn-dark btn-full" id="desktop-modal-dismiss">
+        Got it!
+      </button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      PWA Test Suite by <strong>Yahya</strong> &bull; Responsive for iOS, Android & Desktop
+    </div>
+  </footer>
+
+  <!-- Combined JavaScript Logic -->
+  <script>
+    (function () {
+      'use strict';
+
+      // Global State
+      let deferredInstallPrompt = null;
+
+      // DOM Elements
+      const badgeMode = document.getElementById('badge-mode');
+      const dotMode = document.getElementById('dot-mode');
+      const textMode = document.getElementById('text-mode');
+
+      const badgePlatform = document.getElementById('badge-platform');
+      const textPlatform = document.getElementById('text-platform');
+
+      const dotOnline = document.getElementById('dot-online');
+      const textOnline = document.getElementById('text-online');
+
+      const btnInstallNative = document.getElementById('btn-install-native');
+      const btnIosGuide = document.getElementById('btn-ios-guide');
+      const btnDesktopGuide = document.getElementById('btn-desktop-guide');
+
+      const installDescText = document.getElementById('install-desc-text');
+
+      const chkSw = document.getElementById('chk-sw');
+      const chkSecure = document.getElementById('chk-secure');
+
+      const infoOs = document.getElementById('info-os');
+      const infoBrowser = document.getElementById('info-browser');
+      const infoStandalone = document.getElementById('info-standalone');
+      const infoScreen = document.getElementById('info-screen');
+      const infoTouch = document.getElementById('info-touch');
+
+      const consoleOutput = document.getElementById('console-output');
+
+      // Modals
+      const iosModal = document.getElementById('ios-modal');
+      const modalCloseBtn = document.getElementById('modal-close-btn');
+      const iosModalDismiss = document.getElementById('ios-modal-dismiss');
+
+      const desktopModal = document.getElementById('desktop-modal');
+      const desktopModalClose = document.getElementById('desktop-modal-close');
+      const desktopModalDismiss = document.getElementById('desktop-modal-dismiss');
+
+      // Helper: Console Log
+      function logMessage(source, msg) {
+        const now = new Date();
+        const timeStr = now.toTimeString().split(' ')[0];
+        const line = document.createElement('div');
+        line.className = 'console-line';
+        line.innerHTML = `<span class="console-time">[${timeStr}] [${source}]</span> ${msg}`;
+        consoleOutput.appendChild(line);
+        consoleOutput.scrollTop = consoleOutput.scrollHeight;
+      }
+
+      // 1. Detect Platform & Browser
+      function detectEnvironment() {
+        const ua = navigator.userAgent || '';
+        const platform = navigator.platform || '';
+        
+        let osName = 'Unknown OS';
+        let isIOS = false;
+        let isAndroid = false;
+
+        // Check iOS
+        if (/iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) {
+          osName = 'Apple iOS';
+          isIOS = true;
+        } else if (/Android/.test(ua)) {
+          osName = 'Android';
+          isAndroid = true;
+        } else if (/Win/.test(platform)) {
+          osName = 'Windows';
+        } else if (/Mac/.test(platform)) {
+          osName = 'macOS';
+        } else if (/Linux/.test(platform)) {
+          osName = 'Linux';
+        }
+
+        // Check Browser
+        let browserName = 'Browser';
+        if (/CriOS|Chrome/.test(ua) && !/Edg/.test(ua)) {
+          browserName = 'Chrome';
+        } else if (/Safari/.test(ua) && !/Chrome/.test(ua)) {
+          browserName = 'Safari';
+        } else if (/Edg/.test(ua)) {
+          browserName = 'Edge';
+        } else if (/Firefox/.test(ua)) {
+          browserName = 'Firefox';
+        }
+
+        // Display mode check
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+
+        // Update UI Badges
+        textPlatform.textContent = `${osName} (${browserName})`;
+        infoOs.textContent = osName;
+        infoBrowser.textContent = browserName;
+
+        if (isStandalone) {
+          dotMode.className = 'badge-dot standalone';
+          textMode.textContent = '📱 Standalone PWA';
+          infoStandalone.textContent = 'Yes (Installed)';
+          infoStandalone.className = 'check-status pass';
+          installDescText.textContent = '🎉 App is already installed and running as a standalone PWA!';
+        } else {
+          dotMode.className = 'badge-dot browser';
+          textMode.textContent = '🌐 Web Browser Tab';
+          infoStandalone.textContent = 'No (Browser Mode)';
+          infoStandalone.className = 'check-status warn';
+        }
+
+        // Screen & Touch
+        infoScreen.textContent = `${window.screen.width}x${window.screen.height} (dpr ${window.devicePixelRatio || 1})`;
+        infoTouch.textContent = ('ontouchstart' in window || navigator.maxTouchPoints > 0) ? 'Supported' : 'Mouse Only';
+
+        // Secure Context
+        chkSecure.textContent = window.isSecureContext ? '✓ Secure (HTTPS/Localhost)' : '⚠️ Insecure Context';
+
+        logMessage('System', `OS: ${osName} | Browser: ${browserName} | Standalone: ${isStandalone}`);
+
+        // iOS vs Android UI prompt adjustments
+        if (isIOS && !isStandalone) {
+          btnIosGuide.classList.add('btn-light');
+          btnIosGuide.classList.remove('btn-outline-light');
+        }
+      }
+
+      // 2. Online / Offline Monitoring
+      function updateNetworkStatus() {
+        if (navigator.onLine) {
+          dotOnline.className = 'badge-dot online';
+          textOnline.textContent = 'Online';
+          logMessage('Network', 'Device is ONLINE');
+        } else {
+          dotOnline.className = 'badge-dot offline';
+          textOnline.textContent = 'Offline (Cached Mode)';
+          logMessage('Network', 'Device is OFFLINE - Running from PWA cache');
+        }
+      }
+
+      window.addEventListener('online', updateNetworkStatus);
+      window.addEventListener('offline', updateNetworkStatus);
+
+      // 3. Register Service Worker
+      function registerServiceWorker() {
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.register('./sw.js')
+            .then((reg) => {
+              chkSw.textContent = '✓ Registered & Active';
+              chkSw.className = 'check-status pass';
+              logMessage('ServiceWorker', 'sw.js registered successfully in scope: ' + reg.scope);
+            })
+            .catch((err) => {
+              chkSw.textContent = '❌ Failed';
+              chkSw.className = 'check-status warn';
+              logMessage('ServiceWorker', 'Registration failed: ' + err.message);
+            });
+        } else {
+          chkSw.textContent = '❌ Not Supported';
+          chkSw.className = 'check-status warn';
+          logMessage('ServiceWorker', 'ServiceWorker API not supported in this browser.');
+        }
+      }
+
+      // 4. Native Install Prompt Listener (Android / Desktop Chrome / Edge)
+      window.addEventListener('beforeinstallprompt', (e) => {
+        // Prevent Chrome 67 and earlier from automatically showing the prompt
+        e.preventDefault();
+        deferredInstallPrompt = e;
+        btnInstallNative.style.display = 'inline-flex';
+        logMessage('PWA', 'beforeinstallprompt event fired. Native install ready!');
+      });
+
+      window.addEventListener('appinstalled', () => {
+        deferredInstallPrompt = null;
+        btnInstallNative.style.display = 'none';
+        logMessage('PWA', '🎉 App was successfully installed!');
+        detectEnvironment();
+      });
+
+      btnInstallNative.addEventListener('click', async () => {
+        if (!deferredInstallPrompt) return;
+        deferredInstallPrompt.prompt();
+        const { outcome } = await deferredInstallPrompt.userChoice;
+        logMessage('PWA', `User install choice outcome: ${outcome}`);
+        deferredInstallPrompt = null;
+        btnInstallNative.style.display = 'none';
+      });
+
+      // 5. iOS & Desktop Modal Event Handlers
+      btnIosGuide.addEventListener('click', () => {
+        iosModal.classList.add('active');
+        logMessage('UI', 'Opened iOS Installation Guide modal');
+      });
+
+      modalCloseBtn.addEventListener('click', () => iosModal.classList.remove('active'));
+      iosModalDismiss.addEventListener('click', () => iosModal.classList.remove('active'));
+      iosModal.addEventListener('click', (e) => {
+        if (e.target === iosModal) iosModal.classList.remove('active');
+      });
+
+      btnDesktopGuide.addEventListener('click', () => {
+        desktopModal.classList.add('active');
+        logMessage('UI', 'Opened Android/Desktop Guide modal');
+      });
+
+      desktopModalClose.addEventListener('click', () => desktopModal.classList.remove('active'));
+      desktopModalDismiss.addEventListener('click', () => desktopModal.classList.remove('active'));
+      desktopModal.addEventListener('click', (e) => {
+        if (e.target === desktopModal) desktopModal.classList.remove('active');
+      });
+
+      // 6. Interactive Feature Test Handlers
+      // Test Offline Caching
+      document.getElementById('btn-test-offline').addEventListener('click', async () => {
+        logMessage('Cache', 'Inspecting Cache Storage...');
+        if ('caches' in window) {
+          const keys = await caches.keys();
+          logMessage('Cache', `Found ${keys.length} cache containers: ${keys.join(', ')}`);
+          for (const key of keys) {
+            const cache = await caches.open(key);
+            const requests = await cache.keys();
+            logMessage('Cache', `Container [${key}] stores ${requests.length} resources:`);
+            requests.forEach(r => logMessage('Cache', ` &nbsp;&bull; ${r.url}`));
+          }
+        } else {
+          logMessage('Cache', 'Cache Storage API is not supported.');
+        }
+      });
+
+      // Service Worker Ping
+      document.getElementById('btn-test-sw-ping').addEventListener('click', () => {
+        if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+          const channel = new MessageChannel();
+          channel.port1.onmessage = (event) => {
+            logMessage('ServiceWorker', `SW Response: ${JSON.stringify(event.data)}`);
+          };
+          navigator.serviceWorker.controller.postMessage({ action: 'ping' }, [channel.port2]);
+          logMessage('ServiceWorker', 'Sent ping to active ServiceWorker controller...');
+        } else {
+          logMessage('ServiceWorker', 'No active ServiceWorker controller controlling this page.');
+        }
+      });
+
+      // Clear Cache
+      document.getElementById('btn-clear-cache').addEventListener('click', async () => {
+        if ('caches' in window) {
+          const keys = await caches.keys();
+          for (const key of keys) {
+            await caches.delete(key);
+          }
+          logMessage('Cache', 'All Cache Storage successfully cleared!');
+          alert('Cache cleared! Reload page to re-cache shell assets.');
+        }
+      });
+
+      // Push Notification Test
+      document.getElementById('btn-test-notify').addEventListener('click', async () => {
+        if (!('Notification' in window)) {
+          logMessage('Notification', 'Notification API is not supported in this browser.');
+          alert('Notification API not supported.');
+          return;
+        }
+
+        logMessage('Notification', `Current Permission status: ${Notification.permission}`);
+        if (Notification.permission === 'granted') {
+          new Notification('PWA Test by Yahya', {
+            body: '🎉 Push Notifications are working perfectly on your device!',
+            icon: './icon-192.png'
+          });
+          logMessage('Notification', 'Notification sent!');
+        } else if (Notification.permission !== 'denied') {
+          const permission = await Notification.requestPermission();
+          logMessage('Notification', `Requested permission result: ${permission}`);
+          if (permission === 'granted') {
+            new Notification('PWA Test by Yahya', {
+              body: '🎉 Permission granted! PWA notifications enabled.',
+              icon: './icon-192.png'
+            });
+          }
+        } else {
+          alert('Notifications are blocked in your browser settings.');
+        }
+      });
+
+      // Native Web Share
+      document.getElementById('btn-test-share').addEventListener('click', async () => {
+        if (navigator.share) {
+          try {
+            await navigator.share({
+              title: 'PWA Test by Yahya',
+              text: 'Check out this PWA testing utility application!',
+              url: window.location.href
+            });
+            logMessage('WebShare', 'Successfully shared PWA!');
+          } catch (err) {
+            logMessage('WebShare', 'Share dismissed or failed: ' + err.message);
+          }
+        } else {
+          logMessage('WebShare', 'Web Share API not supported on this device/browser.');
+          alert('Web Share API is not supported on this browser.');
+        }
+      });
+
+      // Vibration Test
+      document.getElementById('btn-test-vibrate').addEventListener('click', () => {
+        if ('vibrate' in navigator) {
+          navigator.vibrate([100, 50, 100, 50, 200]);
+          logMessage('Vibration', 'Triggered haptic vibration pattern [100ms, 50ms, 100ms...]');
+        } else {
+          logMessage('Vibration', 'Vibration API is not supported on this device.');
+          alert('Vibration API not supported on this device.');
+        }
+      });
+
+      // Auto Init
+      detectEnvironment();
+      updateNetworkStatus();
+      registerServiceWorker();
+
+    })();
+  </script>
+</body>
+</html>
