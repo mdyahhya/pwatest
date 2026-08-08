@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Admin - PWA Web Push Control Center</title>
+  <link rel="icon" type="image/png" sizes="64x64" href="favicon.png">
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --card-bg: #1e293b;
+      --border-color: #334155;
+      --text-light: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-blue: #38bdf8;
+      --accent-green: #10b981;
+      --accent-whatsapp: #25d366;
+      --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font);
+      background-color: var(--bg-dark);
+      color: var(--text-light);
+      padding: 20px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 800px;
+    }
+
+    header {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text-light);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .badge-admin {
+      background: var(--accent-blue);
+      color: #0f172a;
+      font-weight: 800;
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 99px;
+      text-transform: uppercase;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--accent-blue);
+    }
+
+    .vapid-box {
+      background: #090d16;
+      border: 1px dashed var(--border-color);
+      border-radius: 8px;
+      padding: 12px;
+      font-family: monospace;
+      font-size: 0.8rem;
+      color: #cbd5e1;
+      word-break: break-all;
+      margin-bottom: 8px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text-muted);
+    }
+
+    input, textarea, select {
+      width: 100%;
+      background: #090d16;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 12px;
+      color: var(--text-light);
+      font-family: var(--font);
+      font-size: 0.95rem;
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent-blue);
+    }
+
+    .preview-box {
+      background: #000000;
+      border-radius: 12px;
+      padding: 14px;
+      border: 1px solid #334155;
+      margin-top: 10px;
+    }
+
+    .preview-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .preview-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+    }
+
+    .preview-title { font-weight: 700; font-size: 0.95rem; }
+    .preview-body { font-size: 0.85rem; color: var(--text-muted); }
+
+    .preview-img {
+      width: 100%;
+      max-height: 160px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+
+    .btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    @media (min-width: 600px) {
+      .btn-group { flex-direction: row; }
+    }
+
+    .btn {
+      flex: 1;
+      padding: 14px 20px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary { background: var(--accent-blue); color: #0f172a; }
+    .btn-primary:hover { opacity: 0.9; }
+
+    .btn-whatsapp { background: var(--accent-whatsapp); color: #ffffff; }
+    .btn-whatsapp:hover { opacity: 0.9; }
+
+    .btn-secondary { background: #334155; color: #ffffff; }
+
+    .console-box {
+      background: #040711;
+      color: #38bdf8;
+      font-family: monospace;
+      font-size: 0.8rem;
+      padding: 12px;
+      border-radius: 8px;
+      max-height: 160px;
+      overflow-y: auto;
+    }
+
+    .console-line { margin-bottom: 4px; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>
+        <span>⚡</span> Web Push Admin Console
+      </h1>
+      <span class="badge-admin">Admin Panel &bull; Yahya</span>
+    </header>
+
+    <!-- VAPID Key & Credentials Box -->
+    <div class="card">
+      <div class="card-title">🔑 VAPID Keys & Environment Settings</div>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">
+        VAPID credentials configured for Apple iOS & Android PWA push notifications:
+      </p>
+      <div class="vapid-box">
+        <strong>VAPID Subject:</strong> mailto:mdyahyamundewadi@gmail.com<br>
+        <strong>VAPID Public Key:</strong> BBLsTTSRyMBDxiJjy8C0EvbC2L3hnFfp2Edo6O4P5iJFbbb9DcSUnS7HVMvSNajJsTyZX54cWE2pQEbKaHFA1u8<br>
+        <strong>Status:</strong> 🟢 Active & Ready
+      </div>
+    </div>
+
+    <!-- Notification Form Builder -->
+    <div class="card">
+      <div class="card-title">📝 Create Push Notification</div>
+
+      <div class="form-group">
+        <label for="notif-title">Notification Title</label>
+        <input type="text" id="notif-title" value="💬 New Special Message from Yahya!">
+      </div>
+
+      <div class="form-group">
+        <label for="notif-body">Notification Message Body</label>
+        <textarea id="notif-body" rows="2">Tap here to view the latest real-time PWA notification feature updates!</textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="notif-image">Image URL (Banner Image)</label>
+        <input type="text" id="notif-image" value="./notification-image.png">
+      </div>
+
+      <!-- Live Preview -->
+      <label>Live Notification Card Preview</label>
+      <div class="preview-box">
+        <div class="preview-header">
+          <img src="./icon-192.png" class="preview-icon" alt="Icon">
+          <div>
+            <div class="preview-title" id="prev-title">💬 New Special Message from Yahya!</div>
+            <div class="preview-body" id="prev-body">Tap here to view the latest real-time PWA notification feature updates!</div>
+          </div>
+        </div>
+        <img src="./notification-image.png" class="preview-img" id="prev-img" alt="Banner Preview">
+      </div>
+
+      <!-- Trigger Buttons -->
+      <div class="btn-group">
+        <button class="btn btn-primary" id="btn-send-system">
+          🚀 Send System Push Notification
+        </button>
+        <button class="btn btn-whatsapp" id="btn-send-whatsapp">
+          💬 Send On-Screen WhatsApp Pop-up
+        </button>
+      </div>
+    </div>
+
+    <!-- Console Log -->
+    <div class="card">
+      <div class="card-title">💻 Admin Dispatch Log</div>
+      <div class="console-box" id="admin-log">
+        <div class="console-line">[Admin] Ready to dispatch push notifications to iOS & Android PWA.</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const inputTitle = document.getElementById('notif-title');
+      const inputBody = document.getElementById('notif-body');
+      const inputImage = document.getElementById('notif-image');
+
+      const prevTitle = document.getElementById('prev-title');
+      const prevBody = document.getElementById('prev-body');
+      const prevImg = document.getElementById('prev-img');
+
+      const adminLog = document.getElementById('admin-log');
+
+      const broadcastChannel = new BroadcastChannel('pwa-notification-channel');
+
+      function log(msg) {
+        const time = new Date().toTimeString().split(' ')[0];
+        const line = document.createElement('div');
+        line.className = 'console-line';
+        line.innerHTML = `[${time}] ${msg}`;
+        adminLog.appendChild(line);
+        adminLog.scrollTop = adminLog.scrollHeight;
+      }
+
+      // Live update preview
+      inputTitle.addEventListener('input', () => prevTitle.textContent = inputTitle.value);
+      inputBody.addEventListener('input', () => prevBody.textContent = inputBody.value);
+      inputImage.addEventListener('input', () => prevImg.src = inputImage.value);
+
+      // Send System Push via Service Worker / Broadcast Channel
+      document.getElementById('btn-send-system').addEventListener('click', async () => {
+        const payload = {
+          title: inputTitle.value,
+          body: inputBody.value,
+          image: inputImage.value,
+          icon: './icon-192.png',
+          timestamp: Date.now(),
+          type: 'SYSTEM_PUSH'
+        };
+
+        log(`Broadcasting System Push Notification: "${payload.title}"`);
+
+        // 1. Broadcast via Channel
+        broadcastChannel.postMessage(payload);
+
+        // 2. LocalStorage event trigger for multi-tab
+        localStorage.setItem('pwa_push_trigger', JSON.stringify(payload));
+
+        // 3. Service Worker Direct Trigger
+        if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+          navigator.serviceWorker.controller.postMessage({
+            action: 'TRIGGER_NOTIFICATION',
+            payload: payload
+          });
+          log('Dispatched directly to ServiceWorker controller.');
+        } else {
+          log('ServiceWorker controller not active in this window, sent via BroadcastChannel.');
+        }
+
+        alert('🚀 System Push Notification Sent to PWA!');
+      });
+
+      // Send WhatsApp Style Pop-up Banner
+      document.getElementById('btn-send-whatsapp').addEventListener('click', () => {
+        const payload = {
+          title: inputTitle.value,
+          body: inputBody.value,
+          image: inputImage.value,
+          icon: './icon-192.png',
+          timestamp: Date.now(),
+          type: 'WHATSAPP_POPUP'
+        };
+
+        log(`Broadcasting WhatsApp-Style On-Screen Pop-up: "${payload.title}"`);
+
+        broadcastChannel.postMessage(payload);
+        localStorage.setItem('pwa_push_trigger', JSON.stringify(payload));
+
+        alert('💬 WhatsApp-Style Screen Pop-up Notification Sent to PWA!');
+      });
+
+    })();
+  </script>
+</body>
+</html>
