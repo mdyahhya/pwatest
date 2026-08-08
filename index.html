@@ -535,10 +535,42 @@
       max-width: 768px;
     }
 
-    footer a {
-      color: var(--text-main);
-      font-weight: 600;
-      text-decoration: none;
+    /* iOS Bottom Pointer Tooltip Banner */
+    .ios-pointer-banner {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(150%);
+      width: calc(100% - 32px);
+      max-width: 440px;
+      background: #0f172a;
+      color: #ffffff;
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      border: 1px solid #334155;
+      z-index: 999;
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 8px;
+    }
+
+    .ios-pointer-banner.active {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .ios-pointer-arrow {
+      font-size: 1.5rem;
+      animation: bounceArrow 1.2s infinite;
+      margin-top: 4px;
+    }
+
+    @keyframes bounceArrow {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(6px); }
     }
   </style>
 </head>
@@ -816,6 +848,17 @@
     </div>
   </div>
 
+  <!-- iOS Floating Pointer Tooltip Banner -->
+  <div class="ios-pointer-banner" id="ios-pointer-banner">
+    <div style="font-size: 0.92rem; font-weight: 700;">
+      🍎 Tap <span style="background: #334155; padding: 2px 8px; border-radius: 4px;">Share 📤</span> below, then <span style="background: #334155; padding: 2px 8px; border-radius: 4px;">Add to Home Screen ➕</span>
+    </div>
+    <div style="font-size: 0.78rem; color: #94a3b8;">
+      Apple Safari requires installing via the Share Sheet menu.
+    </div>
+    <div class="ios-pointer-arrow">👇</div>
+  </div>
+
   <!-- Footer -->
   <footer>
     <div class="container">
@@ -949,6 +992,13 @@
         if (isIOS && !isStandalone) {
           btnIosGuide.classList.add('btn-light');
           btnIosGuide.classList.remove('btn-outline-light');
+          setTimeout(() => {
+            const pointer = document.getElementById('ios-pointer-banner');
+            if (pointer) {
+              pointer.classList.add('active');
+              setTimeout(() => pointer.classList.remove('active'), 7000);
+            }
+          }, 1200);
         }
       }
 
@@ -1015,15 +1065,30 @@
       });
 
       // 5. iOS & Desktop Modal Event Handlers
+      const iosPointerBanner = document.getElementById('ios-pointer-banner');
+
       btnIosGuide.addEventListener('click', () => {
         iosModal.classList.add('active');
-        logMessage('UI', 'Opened iOS Installation Guide modal');
+        if (iosPointerBanner) {
+          iosPointerBanner.classList.add('active');
+          setTimeout(() => iosPointerBanner.classList.remove('active'), 6000);
+        }
+        logMessage('UI', 'Opened iOS Installation Guide & Pointer Tooltip');
       });
 
-      modalCloseBtn.addEventListener('click', () => iosModal.classList.remove('active'));
-      iosModalDismiss.addEventListener('click', () => iosModal.classList.remove('active'));
+      modalCloseBtn.addEventListener('click', () => {
+        iosModal.classList.remove('active');
+        if (iosPointerBanner) iosPointerBanner.classList.remove('active');
+      });
+      iosModalDismiss.addEventListener('click', () => {
+        iosModal.classList.remove('active');
+        if (iosPointerBanner) iosPointerBanner.classList.remove('active');
+      });
       iosModal.addEventListener('click', (e) => {
-        if (e.target === iosModal) iosModal.classList.remove('active');
+        if (e.target === iosModal) {
+          iosModal.classList.remove('active');
+          if (iosPointerBanner) iosPointerBanner.classList.remove('active');
+        }
       });
 
       btnDesktopGuide.addEventListener('click', () => {
