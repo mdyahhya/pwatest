@@ -572,6 +572,94 @@
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(6px); }
     }
+
+    /* WhatsApp & iOS On-Screen Pop-up Notification Card */
+    .whatsapp-popup {
+      position: fixed;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-150%);
+      width: calc(100% - 32px);
+      max-width: 440px;
+      background: rgba(15, 23, 42, 0.94);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      color: #ffffff;
+      border-radius: 18px;
+      padding: 14px 16px;
+      box-shadow: 0 12px 36px rgba(0,0,0,0.35);
+      border: 1px solid rgba(255,255,255,0.15);
+      z-index: 2000;
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .whatsapp-popup.active {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .wa-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      color: #94a3b8;
+    }
+
+    .wa-app-tag {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 700;
+      color: #25d366;
+    }
+
+    .wa-body-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .wa-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      flex-shrink: 0;
+    }
+
+    .wa-content { flex: 1; }
+    .wa-title { font-weight: 750; font-size: 0.95rem; color: #ffffff; margin-bottom: 2px; }
+    .wa-text { font-size: 0.85rem; color: #cbd5e1; line-height: 1.3; }
+
+    .wa-banner-img {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-top: 6px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .wa-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .wa-btn {
+      flex: 1;
+      padding: 8px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      text-align: center;
+    }
+    .wa-btn-main { background: #25d366; color: #ffffff; }
+    .wa-btn-close { background: #334155; color: #ffffff; }
   </style>
 </head>
 <body>
@@ -845,6 +933,31 @@
       <button class="btn btn-dark btn-full" id="desktop-modal-dismiss">
         Got it!
       </button>
+    </div>
+  </div>
+
+  <!-- WhatsApp & iOS Style On-Screen Pop-up Notification -->
+  <div class="whatsapp-popup" id="whatsapp-popup">
+    <div class="wa-header">
+      <span class="wa-app-tag">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12.012 2c-5.506 0-9.989 4.478-9.99 9.984 0 1.758.459 3.474 1.33 4.988l-1.413 5.163 5.283-1.385a9.96 9.96 0 0 0 4.79 1.221h.004c5.505 0 9.987-4.478 9.989-9.985 0-2.668-1.037-5.176-2.924-7.062a9.92 9.92 0 0 0-7.069-2.924z"></path>
+        </svg>
+        PWA Notification &bull; Push by Yahya
+      </span>
+      <span id="wa-time">now</span>
+    </div>
+    <div class="wa-body-row">
+      <img src="./icon-192.png" class="wa-icon" id="wa-icon" alt="Icon">
+      <div class="wa-content">
+        <div class="wa-title" id="wa-title">💬 Special Message</div>
+        <div class="wa-text" id="wa-body">You have received a new Web Push notification!</div>
+      </div>
+    </div>
+    <img src="./notification-image.png" class="wa-banner-img" id="wa-img" alt="Notification Banner">
+    <div class="wa-actions">
+      <button class="wa-btn wa-btn-main" id="wa-btn-open">View Details</button>
+      <button class="wa-btn wa-btn-close" id="wa-btn-close">Dismiss</button>
     </div>
   </div>
 
@@ -1204,6 +1317,68 @@
           alert('Vibration API not supported on this device.');
         }
       });
+
+      // 7. WhatsApp & iOS Style Pop-up Notification Logic
+      const waPopup = document.getElementById('whatsapp-popup');
+      const waTitle = document.getElementById('wa-title');
+      const waBody = document.getElementById('wa-body');
+      const waImg = document.getElementById('wa-img');
+      const waTime = document.getElementById('wa-time');
+      const waBtnOpen = document.getElementById('wa-btn-open');
+      const waBtnClose = document.getElementById('wa-btn-close');
+
+      function showWhatsAppPopup(title, body, image) {
+        if (!waPopup) return;
+        waTitle.textContent = title || '💬 New Message';
+        waBody.textContent = body || 'Tap to view updates.';
+        if (image) {
+          waImg.src = image;
+          waImg.style.display = 'block';
+        } else {
+          waImg.style.display = 'none';
+        }
+        waTime.textContent = new Date().toTimeString().split(' ')[0].substring(0, 5);
+
+        waPopup.classList.add('active');
+        logMessage('Notification', `💬 Pop-up banner displayed on screen: "${title}"`);
+
+        if ('vibrate' in navigator) {
+          navigator.vibrate([100, 50, 100]);
+        }
+
+        setTimeout(() => {
+          waPopup.classList.remove('active');
+        }, 9000);
+      }
+
+      if (waBtnClose) {
+        waBtnClose.addEventListener('click', () => waPopup.classList.remove('active'));
+      }
+      if (waBtnOpen) {
+        waBtnOpen.addEventListener('click', () => {
+          waPopup.classList.remove('active');
+          alert(`Opening notification details: ${waTitle.textContent}`);
+        });
+      }
+
+      // Listen for BroadcastChannel messages from admin.html
+      const broadcastChannel = new BroadcastChannel('pwa-notification-channel');
+      broadcastChannel.onmessage = (event) => {
+        const payload = event.data;
+        logMessage('Broadcast', `Received notification broadcast from Admin: "${payload.title}"`);
+        showWhatsAppPopup(payload.title, payload.body, payload.image);
+      };
+
+      // Listen for Service Worker messages
+      if (navigator.serviceWorker) {
+        navigator.serviceWorker.addEventListener('message', (event) => {
+          if (event.data && event.data.type === 'NOTIFICATION_CLICKED') {
+            const notif = event.data.notification;
+            logMessage('ServiceWorker', `Notification clicked event: ${notif.title}`);
+            showWhatsAppPopup(notif.title, notif.body, notif.image);
+          }
+        });
+      }
 
       // Auto Init
       detectEnvironment();
